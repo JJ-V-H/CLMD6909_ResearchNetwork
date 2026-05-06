@@ -6,18 +6,26 @@
     body { margin: 0; background: #1a1a2e; }
     #container { width: 100vw; height: 100vh; }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/graphology-gexf/dist/graphology-gexf.min.js"></script>
 </head>
 <body>
   <div id="container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/graphology-gexf@0.10.3/dist/graphology-gexf.min.js"></script>
+
   <script>
-    fetch("ResearchNetwork.gexf")
-      .then(r => r.text())
-      .then(gexf => {
-        const graph = GraphologyLibrary.gexf.parse(graphology.Graph, gexf);
+    fetch("your-graph-file.gexf")
+      .then(function(r) { return r.text(); })
+      .then(function(gexf) {
+        const graph = new graphology.Graph();
+        graphologyGEXF.parse(graph, gexf);
         new Sigma(graph, document.getElementById("container"));
+      })
+      .catch(function(err) {
+        console.error("Error loading graph:", err);
+        document.getElementById("container").innerHTML =
+          '<p style="color:white;padding:20px;">Error loading graph: ' + err.message + '</p>';
       });
   </script>
 </body>
