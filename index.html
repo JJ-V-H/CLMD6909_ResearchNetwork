@@ -5,27 +5,29 @@
   <style>
     body { margin: 0; background: #1a1a2e; }
     #container { width: 100vw; height: 100vh; }
+    #status { position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+              color: white; font-family: Arial, sans-serif; font-size: 14px; }
   </style>
 </head>
 <body>
+  <div id="status">Loading graph...</div>
   <div id="container"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/graphology-gexf@0.10.3/dist/graphology-gexf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/graphology-gexf/dist/graphology-gexf.browser.min.js"></script>
 
   <script>
     fetch("your-graph-file.gexf")
       .then(function(r) { return r.text(); })
       .then(function(gexf) {
-        const graph = new graphology.Graph();
-        graphologyGEXF.parse(graph, gexf);
+        document.getElementById("status").style.display = "none";
+        const graph = graphologyGEXF.parse(graphology.Graph, gexf);
         new Sigma(graph, document.getElementById("container"));
       })
       .catch(function(err) {
-        console.error("Error loading graph:", err);
-        document.getElementById("container").innerHTML =
-          '<p style="color:white;padding:20px;">Error loading graph: ' + err.message + '</p>';
+        document.getElementById("status").innerText = "Error: " + err.message;
+        console.error(err);
       });
   </script>
 </body>
